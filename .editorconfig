@@ -8,7 +8,7 @@ root = true
 
 # 縮排和間距
 indent_size = 4
-indent_style = tab
+indent_style = space
 tab_width = 4
 
 # 新行喜好設定
@@ -49,10 +49,10 @@ dotnet_style_namespace_match_folder = true
 dotnet_style_null_propagation = true
 dotnet_style_object_initializer = true
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
-dotnet_style_prefer_auto_properties = true:suggestion
+dotnet_style_prefer_auto_properties = true : suggestion
 dotnet_style_prefer_compound_assignment = true
-dotnet_style_prefer_conditional_expression_over_assignment = true:suggestion
-dotnet_style_prefer_conditional_expression_over_return = true:suggestion
+dotnet_style_prefer_conditional_expression_over_assignment = true : suggestion
+dotnet_style_prefer_conditional_expression_over_return = true : suggestion
 dotnet_style_prefer_inferred_anonymous_type_member_names = true
 dotnet_style_prefer_inferred_tuple_names = true
 dotnet_style_prefer_is_null_check_over_reference_equality_method = true
@@ -93,7 +93,7 @@ csharp_style_expression_bodied_properties = true
 csharp_style_pattern_matching_over_as_with_null_check = true
 csharp_style_pattern_matching_over_is_with_cast_check = true
 csharp_style_prefer_not_pattern = true
-csharp_style_prefer_pattern_matching = true:suggestion
+csharp_style_prefer_pattern_matching = true : suggestion
 csharp_style_prefer_switch_expression = true
 
 # Null 檢查喜好設定
@@ -117,7 +117,7 @@ csharp_style_prefer_index_operator = true
 csharp_style_prefer_range_operator = true
 csharp_style_throw_expression = true
 csharp_style_unused_value_assignment_preference = discard_variable
-csharp_style_unused_value_expression_statement_preference = discard_variable:suggestion
+csharp_style_unused_value_expression_statement_preference = discard_variable : suggestion
 
 # 'using' 指示詞的喜好設定
 csharp_using_directive_placement = outside_namespace
@@ -206,11 +206,11 @@ dotnet_naming_rule.private_or_internal_field_should_be_begins_with_underscore_ca
 
 dotnet_naming_symbols.interface.applicable_kinds = interface
 dotnet_naming_symbols.interface.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
-dotnet_naming_symbols.interface.required_modifiers = 
+dotnet_naming_symbols.interface.required_modifiers =
 
 dotnet_naming_symbols.private_or_internal_field.applicable_kinds = field
 dotnet_naming_symbols.private_or_internal_field.applicable_accessibilities = internal, private, private_protected
-dotnet_naming_symbols.private_or_internal_field.required_modifiers = 
+dotnet_naming_symbols.private_or_internal_field.required_modifiers =
 
 dotnet_naming_symbols.private_or_internal_static_field.applicable_kinds = field
 dotnet_naming_symbols.private_or_internal_static_field.applicable_accessibilities = internal, private, private_protected
@@ -218,11 +218,11 @@ dotnet_naming_symbols.private_or_internal_static_field.required_modifiers = stat
 
 dotnet_naming_symbols.types.applicable_kinds = class, struct, interface, enum
 dotnet_naming_symbols.types.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
-dotnet_naming_symbols.types.required_modifiers = 
+dotnet_naming_symbols.types.required_modifiers =
 
 dotnet_naming_symbols.non_field_members.applicable_kinds = property, event, method
 dotnet_naming_symbols.non_field_members.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
-dotnet_naming_symbols.non_field_members.required_modifiers = 
+dotnet_naming_symbols.non_field_members.required_modifiers =
 
 dotnet_naming_symbols.const_field.applicable_kinds = field
 dotnet_naming_symbols.const_field.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
@@ -230,22 +230,22 @@ dotnet_naming_symbols.const_field.required_modifiers = const
 
 # 命名樣式
 
-dotnet_naming_style.pascal_case.required_prefix = 
-dotnet_naming_style.pascal_case.required_suffix = 
-dotnet_naming_style.pascal_case.word_separator = 
+dotnet_naming_style.pascal_case.required_prefix =
+dotnet_naming_style.pascal_case.required_suffix =
+dotnet_naming_style.pascal_case.word_separator =
 dotnet_naming_style.pascal_case.capitalization = pascal_case
 
 dotnet_naming_style.begins_with_i.required_prefix = I
-dotnet_naming_style.begins_with_i.required_suffix = 
-dotnet_naming_style.begins_with_i.word_separator = 
+dotnet_naming_style.begins_with_i.required_suffix =
+dotnet_naming_style.begins_with_i.word_separator =
 dotnet_naming_style.begins_with_i.capitalization = pascal_case
 
 dotnet_naming_style.begins_with_underscore.required_prefix = _
-dotnet_naming_style.begins_with_underscore.required_suffix = 
-dotnet_naming_style.begins_with_underscore.word_separator = 
+dotnet_naming_style.begins_with_underscore.required_suffix =
+dotnet_naming_style.begins_with_underscore.word_separator =
 dotnet_naming_style.begins_with_underscore.capitalization = pascal_case
 
 dotnet_naming_style.begins_with_underscore_camlcase.required_prefix = _
-dotnet_naming_style.begins_with_underscore_camlcase.required_suffix = 
-dotnet_naming_style.begins_with_underscore_camlcase.word_separator = 
+dotnet_naming_style.begins_with_underscore_camlcase.required_suffix =
+dotnet_naming_style.begins_with_underscore_camlcase.word_separator =
 dotnet_naming_style.begins_with_underscore_camlcase.capitalization = camel_case

@@ -1,15 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <Version>0.0.1</Version>
-    <Authors>Raypro</Authors>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<Version>0.0.1</Version>
+		<Authors>Raypro</Authors>
+		<IsPackable>true</IsPackable>
+		<RepositoryUrl>https://gitlab.com/rayprosoft/tgs-webapi-toolkits.git</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>WebApi Tool</PackageTags>
+		<PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-webapi-toolkits</PackageProjectUrl>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.2.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.2.1" />
+	</ItemGroup>
 
 </Project>
