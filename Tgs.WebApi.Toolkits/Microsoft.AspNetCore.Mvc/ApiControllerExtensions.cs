@@ -7,44 +7,81 @@ namespace Microsoft.AspNetCore.Mvc
 {
     public static class ApiControllerExtensions
     {
-        public static TResult Fail<TResult>(this ControllerBase controller, HttpStatusCode statusCode, string errorMessage)
-        {
-            return Fail<TResult>(controller, (int)statusCode, errorMessage);
-        }
+        public static TResult Fail<TResult, TFailResult>(
+            this ControllerBase controller,
+            HttpStatusCode statusCode,
+            TFailResult failResult)
+            => Fail<TResult, TFailResult>(
+                controller,
+                (int)statusCode,
+                failResult);
 
-        public static TResult Fail<TResult>(this ControllerBase controller, int statusCode, string errorMessage)
+        public static TResult Fail<TResult, TFailResult>(
+            this ControllerBase controller,
+            int statusCode,
+            TFailResult failResult)
         {
-            Fail(controller, statusCode, errorMessage);
+            Fail(controller, statusCode, failResult);
 
             return default!;
         }
 
-        public static Task<TResult> FailAsync<TResult>(this ControllerBase controller, HttpStatusCode statusCode, string errorMessage)
-            => FailAsync<TResult>(controller, (int)statusCode, errorMessage);
+        public static void Fail<TFailResult>(
+            this ControllerBase controller,
+            HttpStatusCode statusCode,
+            TFailResult failResult)
+            => Fail(
+                controller,
+                (int)statusCode,
+                failResult);
 
-        public static Task<TResult> FailAsync<TResult>(this ControllerBase controller, int statusCode, string errorMessage)
-            => Task.FromResult(Fail<TResult>(controller, statusCode, errorMessage));
-
-        public static void Fail(this ControllerBase controller, HttpStatusCode statusCode, string errorMessage)
-            => Fail(controller, (int)statusCode, errorMessage);
-
-        public static void Fail(this ControllerBase controller, int statusCode, string errorMessage)
+        public static void Fail<TFailResult>(
+            this ControllerBase controller,
+            int statusCode,
+            TFailResult result)
         {
             var responseFeature = controller.HttpContext.Features.Get<IHttpResponseFeature>();
 
             responseFeature.StatusCode = statusCode;
 
-            var failResponseFeature = new FailResponseFeature<string>((int)statusCode, errorMessage);
+            var failResponseFeature = new FailResponseFeature<TFailResult>((int)statusCode, result);
 
             controller.HttpContext.Features.Set<IFailResponseFeature>(failResponseFeature);
         }
 
-        public static Task FailAsync(this ControllerBase controller, HttpStatusCode statusCode, string errorMessage)
-            => FailAsync(controller, (int)statusCode, errorMessage);
+        public static Task<TResult> FailAsync<TResult, TFailResult>(
+            this ControllerBase controller,
+            HttpStatusCode statusCode,
+            TFailResult failResult)
+            => FailAsync<TResult, TFailResult>(
+                controller,
+                (int)statusCode,
+                failResult);
 
-        public static Task FailAsync(this ControllerBase controller, int statusCode, string errorMessage)
+        public static Task<TResult> FailAsync<TResult, TFailResult>(
+            this ControllerBase controller,
+            int statusCode,
+            TFailResult failResult)
+            => Task.FromResult(Fail<TResult, TFailResult>(
+                controller,
+                statusCode,
+                failResult));
+
+        public static Task FailAsync<TFailResult>(
+            this ControllerBase controller,
+            HttpStatusCode statusCode,
+            TFailResult failResult)
+            => FailAsync(
+                controller,
+                (int)statusCode,
+                failResult);
+
+        public static Task FailAsync<TFailResult>(
+            this ControllerBase controller,
+            int statusCode,
+            TFailResult failResult)
         {
-            Fail(controller, statusCode, errorMessage);
+            Fail(controller, statusCode, failResult);
 
             return Task.CompletedTask;
         }
