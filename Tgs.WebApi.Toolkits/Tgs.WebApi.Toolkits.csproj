@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net5.0</TargetFramework>
 		<Nullable>enable</Nullable>
-		<Version>0.0.3</Version>
+		<Version>0.0.8</Version>
 		<Authors>Raypro</Authors>
 		<IsPackable>true</IsPackable>
 		<RepositoryUrl>https://gitlab.com/rayprosoft/tgs-webapi-toolkits.git</RepositoryUrl>
@@ -17,6 +17,7 @@
 		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.2.1">
 		  <PrivateAssets>all</PrivateAssets>
 		</PackageReference>
+		<PackageReference Include="System.Linq.Async" Version="5.0.0" />
 	</ItemGroup>
 
 </Project>

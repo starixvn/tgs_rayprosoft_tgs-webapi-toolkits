@@ -1,14 +1,28 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Tgs.WebApi.Toolkits
+namespace Tgs.WebApi.Toolkits.Documentation
 {
-    public class SwaggerDocFilter : IOperationFilter
+    public class SwaggerApiStatusCodeFilter<TTypeConverter> : IOperationFilter where TTypeConverter : class, ITypeConverter
     {
+        private readonly IServiceProvider _serviceProvider;
+
+        public SwaggerApiStatusCodeFilter(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+        }
+
         public void Apply(OpenApiOperation operation, OperationFilterContext context)
         {
+            var typeConverter = ActivatorUtilities.CreateInstance<TTypeConverter>(
+                _serviceProvider,
+                context.SchemaGenerator,
+                context.SchemaRepository);
+
             var successStatusCodeAttr = context
                 .ApiDescription
                 .ActionDescriptor
@@ -35,12 +49,22 @@ namespace Tgs.WebApi.Toolkits
                             {
                                 ["application/json"] = new OpenApiMediaType
                                 {
-                                    Schema = context.SchemaGenerator.GenerateSchema(
-                                        responseType.Type,
-                                        context.SchemaRepository)
+                                    Schema = typeConverter.GenerateSuccessSchema(responseType.Type)
                                 }
                             }
                     });
+            }
+            else
+            {
+                foreach (var response in operation.Responses)
+                {
+                    var resType = context.ApiDescription.SupportedResponseTypes
+                        .Where(r => r.StatusCode.ToString() == response.Key)
+                        .FirstOrDefault();
+
+                    foreach (var content in response.Value.Content)
+                        content.Value.Schema = typeConverter.GenerateSuccessSchema(resType?.Type);
+                }
             }
 
             foreach (var attr in context.ApiDescription.ActionDescriptor.EndpointMetadata.OfType<FailStatusCodeAttribute>())
@@ -56,7 +80,7 @@ namespace Tgs.WebApi.Toolkits
                             {
                                 ["application/json"] = new OpenApiMediaType
                                 {
-                                    Schema = context.SchemaGenerator.GenerateSchema(attr.ErrorResponseType, context.SchemaRepository)
+                                    Schema = typeConverter.GenerateFailSchema(attr.ErrorResponseType)
                                 }
                             }
                     });

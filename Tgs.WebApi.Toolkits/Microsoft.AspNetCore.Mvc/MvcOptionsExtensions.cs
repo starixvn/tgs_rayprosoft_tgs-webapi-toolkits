@@ -8,5 +8,10 @@ namespace Microsoft.AspNetCore.Mvc
         {
             options.Filters.Add<RetouchResponseFilter>();
         }
+
+        public static void AddWrapResponseFilters(this MvcOptions options)
+        {
+            options.Filters.Add<WrapResponseFilter>();
+        }
     }
 }
