@@ -11,6 +11,12 @@ pipeline {
 				sh "dotnet build -c $BuildConfiguration"
 			}
 		}
+
+		stage('Test') {
+			steps {
+				sh 'dotnet test -c $BuildConfiguration --logger trx --no-build'
+			}
+		}
 		
 		stage('Pack & Push packages') {
 			steps {
@@ -18,5 +24,11 @@ pipeline {
 				sh 'dotnet nuget push Tgs.WebApi.Toolkits/bin/$BuildConfiguration/*.nupkg -s "raypro-baget" -k admin --skip-duplicate'
 			}
 		}
+	}
+
+	post {
+        always {
+            step([$class: 'MSTestPublisher', testResultsFile:"**/*.trx", failOnError: false, keepLongStdio: true])
+        }
 	}
 }
