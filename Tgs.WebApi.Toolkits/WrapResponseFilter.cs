@@ -125,7 +125,7 @@ namespace Tgs.WebApi.Toolkits
                     {
                         var adjustResult = new ObjectResult(new SuccessViewModel<object>
                         {
-                            Data = result.Value
+                            Data = result.Value!
                         });
 
                         adjustResult.StatusCode = result.StatusCode;

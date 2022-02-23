@@ -42,9 +42,10 @@ namespace Microsoft.AspNetCore.Mvc
         {
             var responseFeature = controller.HttpContext.Features.Get<IHttpResponseFeature>();
 
-            responseFeature.StatusCode = statusCode;
+            if (responseFeature is not null)
+                responseFeature.StatusCode = statusCode;
 
-            var failResponseFeature = new FailResponseFeature<TFailResult>((int)statusCode, result);
+            var failResponseFeature = new FailResponseFeature<TFailResult>(statusCode, result);
 
             controller.HttpContext.Features.Set<IFailResponseFeature>(failResponseFeature);
         }
