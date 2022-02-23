@@ -1,7 +1,9 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel;
+using System.Text.Json.Serialization;
 
 namespace Tgs.WebApi.Toolkits.ViewModels
 {
+    [DisplayName("Failure")]
     public class FailViewModel
     {
         [JsonPropertyName("err")]

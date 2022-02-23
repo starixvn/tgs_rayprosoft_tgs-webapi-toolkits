@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.Features;
+﻿using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Tgs.WebApi.Toolkits
@@ -16,15 +14,18 @@ namespace Tgs.WebApi.Toolkits
             var failResponseFeature = context.HttpContext.Features.Get<IFailResponseFeature>();
             var responseFeature = context.HttpContext.Features.Get<IHttpResponseFeature>();
 
+            if (responseFeature is null)
+                await next();
+
             if (failResponseFeature != null)
             {
-                responseFeature.StatusCode = failResponseFeature.StatusCode;
+                responseFeature!.StatusCode = failResponseFeature.StatusCode;
 
                 context.Result = failResponseFeature.GetActionResult();
             }
             else if (successStatusCodeAttr != null)
             {
-                responseFeature.StatusCode = successStatusCodeAttr.StatusCode;
+                responseFeature!.StatusCode = successStatusCodeAttr.StatusCode;
             }
 
             await next();
