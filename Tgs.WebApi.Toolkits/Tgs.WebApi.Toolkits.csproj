@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>net5.0;net6.0</TargetFrameworks>
 		<Nullable>enable</Nullable>
-		<Version>0.0.9</Version>
+		<Version>0.0.10</Version>
 		<Authors>Raypro</Authors>
 		<IsPackable>true</IsPackable>
 		<RepositoryUrl>https://gitlab.com/rayprosoft/tgs-webapi-toolkits.git</RepositoryUrl>
@@ -12,6 +12,7 @@
 		<PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-webapi-toolkits</PackageProjectUrl>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<LangVersion>10.0</LangVersion>
+		<Description>用於處理swagger、web api的status code處理、http client logging</Description>
 	</PropertyGroup>
 
 	<ItemGroup>
