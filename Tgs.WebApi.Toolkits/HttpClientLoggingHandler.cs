@@ -14,23 +14,39 @@ internal class HttpClientLoggingHandler<TServiceClient> : DelegatingHandler
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"Request: {request}");
-
-        if (request.Content != null)
-        {
-            _logger.LogInformation($"Request Body: {await request.Content.ReadAsStringAsync().ConfigureAwait(false)}");
-        }
+        await LogRequestAsync(request, cancellationToken).ConfigureAwait(false);
 
         HttpResponseMessage response = await base
             .SendAsync(request, cancellationToken)
             .ConfigureAwait(false);
-
-        _logger.LogInformation($"Response: {response}");
-        if (response.Content != null)
-        {
-            _logger.LogInformation($"Response Body: {await response.Content.ReadAsStringAsync().ConfigureAwait(false)}");
-        }
+        await LogResponseAsync(response, cancellationToken).ConfigureAwait(false);
 
         return response;
+    }
+
+    private async Task LogResponseAsync(HttpResponseMessage response, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Response: {response}", response);
+        if (response.Content != null)
+        {
+            _logger.LogInformation(
+                "Response Body: {content}",
+                await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false));
+        }
+    }
+
+    private async Task LogRequestAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        if (!_logger.IsEnabled(LogLevel.Information))
+            return;
+
+        _logger.LogInformation("Request: {request}", request);
+
+        if (request.Content != null)
+        {
+            _logger.LogInformation(
+                "Request Body: {content}",
+                await request.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false));
+        }
     }
 }

@@ -1,12 +1,11 @@
 ﻿using System;
 using Microsoft.OpenApi.Models;
 
-namespace Tgs.WebApi.Toolkits.Documentation
-{
-    public interface ITypeConverter
-    {
-        OpenApiSchema? GenerateFailSchema(Type? modelType);
+namespace Tgs.WebApi.Toolkits.Documentation;
 
-        OpenApiSchema? GenerateSuccessSchema(Type? modelType);
-    }
+public interface ITypeConverter
+{
+    OpenApiSchema? GenerateFailSchema(Type? modelType);
+
+    OpenApiSchema? GenerateSuccessSchema(Type? modelType);
 }

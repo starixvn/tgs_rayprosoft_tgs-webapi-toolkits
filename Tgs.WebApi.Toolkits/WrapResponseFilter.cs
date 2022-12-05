@@ -1,140 +1,143 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Tgs.WebApi.Toolkits.ViewModels;
 
-namespace Tgs.WebApi.Toolkits
+namespace Tgs.WebApi.Toolkits;
+
+public class WrapResponseFilter : IAsyncActionFilter
 {
-    public class WrapResponseFilter : IAsyncActionFilter
+    public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
-        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        var executedContext = await next();
+
+        if (!executedContext.ModelState.IsValid)
+            return;
+
+        switch (executedContext.Result)
         {
-            var executedContext = await next();
+            case EmptyResult:
+                executedContext.Result = new ObjectResult(new SuccessViewModel<object?>());
+                break;
 
-            if (!executedContext.ModelState.IsValid)
-                return;
-
-            switch (executedContext.Result)
-            {
-                case EmptyResult:
-                    executedContext.Result = new ObjectResult(new SuccessViewModel<object?>());
-                    break;
-
-                case ObjectResult result when result.Value is IAsyncEnumerable<object> ae:
+            case ObjectResult result when result.Value is IAsyncEnumerable<object> ae:
+                {
+                    var adjustResult = new ObjectResult(new SuccessViewModel<IEnumerable<object>>
                     {
-                        var adjustResult = new ObjectResult(new SuccessViewModel<IEnumerable<object>>
-                        {
-                            Data = ae.ToEnumerable()
-                        });
-
-                        adjustResult.StatusCode = result.StatusCode;
-                        adjustResult.Formatters = result.Formatters;
-
-                        executedContext.Result = adjustResult;
-                    }
-                    break;
-
-                case ObjectResult result when result.Value is IAsyncEnumerable<int> ae:
+                        Data = ae.ToEnumerable()
+                    })
                     {
-                        var adjustResult = new ObjectResult(new SuccessViewModel<IEnumerable<int>>
-                        {
-                            Data = ae.ToEnumerable()
-                        });
+                        StatusCode = result.StatusCode,
+                        Formatters = result.Formatters
+                    };
 
-                        adjustResult.StatusCode = result.StatusCode;
-                        adjustResult.Formatters = result.Formatters;
+                    executedContext.Result = adjustResult;
+                }
+                break;
 
-                        executedContext.Result = adjustResult;
-                    }
-                    break;
-
-                case ObjectResult result when result.Value is IAsyncEnumerable<long> ae:
+            case ObjectResult result when result.Value is IAsyncEnumerable<int> ae:
+                {
+                    var adjustResult = new ObjectResult(new SuccessViewModel<IEnumerable<int>>
                     {
-                        var adjustResult = new ObjectResult(new SuccessViewModel<IEnumerable<long>>
-                        {
-                            Data = ae.ToEnumerable()
-                        });
-
-                        adjustResult.StatusCode = result.StatusCode;
-                        adjustResult.Formatters = result.Formatters;
-
-                        executedContext.Result = adjustResult;
-                    }
-                    break;
-
-                case ObjectResult result when result.Value is IAsyncEnumerable<float> ae:
+                        Data = ae.ToEnumerable()
+                    })
                     {
-                        var adjustResult = new ObjectResult(new SuccessViewModel<IEnumerable<float>>
-                        {
-                            Data = ae.ToEnumerable()
-                        });
+                        StatusCode = result.StatusCode,
+                        Formatters = result.Formatters
+                    };
 
-                        adjustResult.StatusCode = result.StatusCode;
-                        adjustResult.Formatters = result.Formatters;
+                    executedContext.Result = adjustResult;
+                }
+                break;
 
-                        executedContext.Result = adjustResult;
-                    }
-                    break;
-
-                case ObjectResult result when result.Value is IAsyncEnumerable<double> ae:
+            case ObjectResult result when result.Value is IAsyncEnumerable<long> ae:
+                {
+                    var adjustResult = new ObjectResult(new SuccessViewModel<IEnumerable<long>>
                     {
-                        var adjustResult = new ObjectResult(new SuccessViewModel<IEnumerable<double>>
-                        {
-                            Data = ae.ToEnumerable()
-                        });
-
-                        adjustResult.StatusCode = result.StatusCode;
-                        adjustResult.Formatters = result.Formatters;
-
-                        executedContext.Result = adjustResult;
-                    }
-                    break;
-
-                case ObjectResult result when result.Value is IAsyncEnumerable<decimal> ae:
+                        Data = ae.ToEnumerable()
+                    })
                     {
-                        var adjustResult = new ObjectResult(new SuccessViewModel<IEnumerable<decimal>>
-                        {
-                            Data = ae.ToEnumerable()
-                        });
+                        StatusCode = result.StatusCode,
+                        Formatters = result.Formatters
+                    };
 
-                        adjustResult.StatusCode = result.StatusCode;
-                        adjustResult.Formatters = result.Formatters;
+                    executedContext.Result = adjustResult;
+                }
+                break;
 
-                        executedContext.Result = adjustResult;
-                    }
-                    break;
-
-                case ObjectResult result when result.Value is IAsyncEnumerable<Guid> ae:
+            case ObjectResult result when result.Value is IAsyncEnumerable<float> ae:
+                {
+                    var adjustResult = new ObjectResult(new SuccessViewModel<IEnumerable<float>>
                     {
-                        var adjustResult = new ObjectResult(new SuccessViewModel<IEnumerable<Guid>>
-                        {
-                            Data = ae.ToEnumerable()
-                        });
-
-                        adjustResult.StatusCode = result.StatusCode;
-                        adjustResult.Formatters = result.Formatters;
-
-                        executedContext.Result = adjustResult;
-                    }
-                    break;
-
-                case ObjectResult result:
+                        Data = ae.ToEnumerable()
+                    })
                     {
-                        var adjustResult = new ObjectResult(new SuccessViewModel<object>
-                        {
-                            Data = result.Value!
-                        });
+                        StatusCode = result.StatusCode,
+                        Formatters = result.Formatters
+                    };
 
-                        adjustResult.StatusCode = result.StatusCode;
-                        adjustResult.Formatters = result.Formatters;
+                    executedContext.Result = adjustResult;
+                }
+                break;
 
-                        executedContext.Result = adjustResult;
-                    }
-                    break;
-            }
+            case ObjectResult result when result.Value is IAsyncEnumerable<double> ae:
+                {
+                    var adjustResult = new ObjectResult(new SuccessViewModel<IEnumerable<double>>
+                    {
+                        Data = ae.ToEnumerable()
+                    })
+                    {
+                        StatusCode = result.StatusCode,
+                        Formatters = result.Formatters
+                    };
+
+                    executedContext.Result = adjustResult;
+                }
+                break;
+
+            case ObjectResult result when result.Value is IAsyncEnumerable<decimal> ae:
+                {
+                    var adjustResult = new ObjectResult(new SuccessViewModel<IEnumerable<decimal>>
+                    {
+                        Data = ae.ToEnumerable()
+                    })
+                    {
+                        StatusCode = result.StatusCode,
+                        Formatters = result.Formatters
+                    };
+
+                    executedContext.Result = adjustResult;
+                }
+                break;
+
+            case ObjectResult result when result.Value is IAsyncEnumerable<Guid> ae:
+                {
+                    var adjustResult = new ObjectResult(new SuccessViewModel<IEnumerable<Guid>>
+                    {
+                        Data = ae.ToEnumerable()
+                    })
+                    {
+                        StatusCode = result.StatusCode,
+                        Formatters = result.Formatters
+                    };
+
+                    executedContext.Result = adjustResult;
+                }
+                break;
+
+            case ObjectResult result:
+                {
+                    var adjustResult = new ObjectResult(new SuccessViewModel<object>
+                    {
+                        Data = result.Value!
+                    })
+                    {
+                        StatusCode = result.StatusCode,
+                        Formatters = result.Formatters
+                    };
+
+                    executedContext.Result = adjustResult;
+                }
+                break;
         }
     }
 }

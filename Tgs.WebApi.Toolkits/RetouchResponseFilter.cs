@@ -1,34 +1,33 @@
 ﻿using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Tgs.WebApi.Toolkits
+namespace Tgs.WebApi.Toolkits;
+
+public class RetouchResponseFilter : IAsyncResultFilter
 {
-    public class RetouchResponseFilter : IAsyncResultFilter
+    public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
     {
-        public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
+        if (!context.ModelState.IsValid)
+            return;
+
+        var successStatusCodeAttr = context.ActionDescriptor.EndpointMetadata.OfType<SuccessStatusCodeAttribute>().LastOrDefault();
+        var failResponseFeature = context.HttpContext.Features.Get<IFailResponseFeature>();
+        var responseFeature = context.HttpContext.Features.Get<IHttpResponseFeature>();
+
+        if (responseFeature is null)
+            _ = await next();
+
+        if (failResponseFeature != null)
         {
-            if (!context.ModelState.IsValid)
-                return;
+            responseFeature!.StatusCode = failResponseFeature.StatusCode;
 
-            var successStatusCodeAttr = context.ActionDescriptor.EndpointMetadata.OfType<SuccessStatusCodeAttribute>().LastOrDefault();
-            var failResponseFeature = context.HttpContext.Features.Get<IFailResponseFeature>();
-            var responseFeature = context.HttpContext.Features.Get<IHttpResponseFeature>();
-
-            if (responseFeature is null)
-                await next();
-
-            if (failResponseFeature != null)
-            {
-                responseFeature!.StatusCode = failResponseFeature.StatusCode;
-
-                context.Result = failResponseFeature.GetActionResult();
-            }
-            else if (successStatusCodeAttr != null)
-            {
-                responseFeature!.StatusCode = successStatusCodeAttr.StatusCode;
-            }
-
-            await next();
+            context.Result = failResponseFeature.GetActionResult();
         }
+        else if (successStatusCodeAttr != null)
+        {
+            responseFeature!.StatusCode = successStatusCodeAttr.StatusCode;
+        }
+
+        _ = await next();
     }
 }

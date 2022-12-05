@@ -14,7 +14,7 @@ public static class HttpClientBuilderExtensions
 
     public static IHttpClientBuilder AddLoggingHandler<TServiceClient>(this IHttpClientBuilder httpClientBuilder)
     {
-        httpClientBuilder.Services.AddHttpClientLoggingHandler();
+        _ = httpClientBuilder.Services.AddHttpClientLoggingHandler();
 
         return httpClientBuilder.AddHttpMessageHandler<HttpClientLoggingHandler<TServiceClient>>();
     }

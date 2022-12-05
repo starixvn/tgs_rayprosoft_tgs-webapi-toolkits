@@ -1,18 +1,17 @@
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Tgs.WebApi.Toolkits.ViewModels;
 
-namespace Tgs.WebApi.Toolkits.UnitTests
+namespace Tgs.WebApi.Toolkits.UnitTests;
+
+public class GenericTypeTests
 {
-    public class GenericTypeTests
+    [Test]
+    public void Check_GenericType()
     {
-        [Test]
-        public void Check_GenericType()
-        {
-            var expected = typeof(SuccessViewModel<>);
+        var expected = typeof(SuccessViewModel<>);
 
-            var actual = typeof(SuccessViewModel<int>);
+        var actual = typeof(SuccessViewModel<int>);
 
-            Assert.AreEqual(expected, actual.GetGenericTypeDefinition());
-        }
+        Assert.AreEqual(expected, actual.GetGenericTypeDefinition());
     }
 }

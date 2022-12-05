@@ -5,86 +5,85 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Tgs.WebApi.Toolkits.Documentation
+namespace Tgs.WebApi.Toolkits.Documentation;
+
+public class SwaggerApiStatusCodeFilter<TTypeConverter> : IOperationFilter where TTypeConverter : class, ITypeConverter
 {
-    public class SwaggerApiStatusCodeFilter<TTypeConverter> : IOperationFilter where TTypeConverter : class, ITypeConverter
+    private readonly IServiceProvider _serviceProvider;
+
+    public SwaggerApiStatusCodeFilter(IServiceProvider serviceProvider)
     {
-        private readonly IServiceProvider _serviceProvider;
+        _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+    }
 
-        public SwaggerApiStatusCodeFilter(IServiceProvider serviceProvider)
+    public void Apply(OpenApiOperation operation, OperationFilterContext context)
+    {
+        var typeConverter = ActivatorUtilities.CreateInstance<TTypeConverter>(
+            _serviceProvider,
+            context.SchemaGenerator,
+            context.SchemaRepository);
+
+        var successStatusCodeAttr = context
+            .ApiDescription
+            .ActionDescriptor
+            .EndpointMetadata
+            .OfType<SuccessStatusCodeAttribute>()
+            .LastOrDefault();
+
+        if (successStatusCodeAttr != null)
         {
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            operation.Responses.Clear();
+
+            var responseType = context.ApiDescription
+                .SupportedResponseTypes
+                .FirstOrDefault();
+
+            operation.Responses.Add(
+                successStatusCodeAttr.StatusCode.ToString(),
+                new OpenApiResponse
+                {
+                    Description = successStatusCodeAttr.Description,
+                    Content = responseType == null || responseType.Type == typeof(void)
+                        ? null
+                        : new Dictionary<string, OpenApiMediaType>
+                        {
+                            ["application/json"] = new OpenApiMediaType
+                            {
+                                Schema = typeConverter.GenerateSuccessSchema(responseType.Type)
+                            }
+                        }
+                });
         }
-
-        public void Apply(OpenApiOperation operation, OperationFilterContext context)
+        else
         {
-            var typeConverter = ActivatorUtilities.CreateInstance<TTypeConverter>(
-                _serviceProvider,
-                context.SchemaGenerator,
-                context.SchemaRepository);
-
-            var successStatusCodeAttr = context
-                .ApiDescription
-                .ActionDescriptor
-                .EndpointMetadata
-                .OfType<SuccessStatusCodeAttribute>()
-                .LastOrDefault();
-
-            if (successStatusCodeAttr != null)
+            foreach (var response in operation.Responses)
             {
-                operation.Responses.Clear();
-
-                var responseType = context.ApiDescription
-                    .SupportedResponseTypes
+                var resType = context.ApiDescription.SupportedResponseTypes
+                    .Where(r => r.StatusCode.ToString() == response.Key)
                     .FirstOrDefault();
 
-                operation.Responses.Add(
-                    successStatusCodeAttr.StatusCode.ToString(),
-                    new OpenApiResponse
-                    {
-                        Description = successStatusCodeAttr.Description,
-                        Content = responseType == null || responseType.Type == typeof(void)
-                            ? null
-                            : new Dictionary<string, OpenApiMediaType>
-                            {
-                                ["application/json"] = new OpenApiMediaType
-                                {
-                                    Schema = typeConverter.GenerateSuccessSchema(responseType.Type)
-                                }
-                            }
-                    });
+                foreach (var content in response.Value.Content)
+                    content.Value.Schema = typeConverter.GenerateSuccessSchema(resType?.Type);
             }
-            else
-            {
-                foreach (var response in operation.Responses)
+        }
+
+        foreach (var attr in context.ApiDescription.ActionDescriptor.EndpointMetadata.OfType<FailStatusCodeAttribute>())
+        {
+            operation.Responses.Add(
+                attr.StatusCode.ToString(),
+                new OpenApiResponse
                 {
-                    var resType = context.ApiDescription.SupportedResponseTypes
-                        .Where(r => r.StatusCode.ToString() == response.Key)
-                        .FirstOrDefault();
-
-                    foreach (var content in response.Value.Content)
-                        content.Value.Schema = typeConverter.GenerateSuccessSchema(resType?.Type);
-                }
-            }
-
-            foreach (var attr in context.ApiDescription.ActionDescriptor.EndpointMetadata.OfType<FailStatusCodeAttribute>())
-            {
-                operation.Responses.Add(
-                    attr.StatusCode.ToString(),
-                    new OpenApiResponse
-                    {
-                        Description = attr.Description,
-                        Content = attr.ErrorResponseType == null
-                            ? null
-                            : new Dictionary<string, OpenApiMediaType>
+                    Description = attr.Description,
+                    Content = attr.ErrorResponseType == null
+                        ? null
+                        : new Dictionary<string, OpenApiMediaType>
+                        {
+                            ["application/json"] = new OpenApiMediaType
                             {
-                                ["application/json"] = new OpenApiMediaType
-                                {
-                                    Schema = typeConverter.GenerateFailSchema(attr.ErrorResponseType)
-                                }
+                                Schema = typeConverter.GenerateFailSchema(attr.ErrorResponseType)
                             }
-                    });
-            }
+                        }
+                });
         }
     }
 }
