@@ -24,17 +24,6 @@ internal class HttpClientLoggingHandler<TServiceClient> : DelegatingHandler
         return response;
     }
 
-    private async Task LogResponseAsync(HttpResponseMessage response, CancellationToken cancellationToken)
-    {
-        _logger.LogInformation("Response: {response}", response);
-        if (response.Content != null)
-        {
-            _logger.LogInformation(
-                "Response Body: {content}",
-                await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false));
-        }
-    }
-
     private async Task LogRequestAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         if (!_logger.IsEnabled(LogLevel.Information))
@@ -43,10 +32,21 @@ internal class HttpClientLoggingHandler<TServiceClient> : DelegatingHandler
         _logger.LogInformation("Request: {request}", request);
 
         if (request.Content != null)
-        {
             _logger.LogInformation(
                 "Request Body: {content}",
                 await request.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false));
-        }
+    }
+
+    private async Task LogResponseAsync(HttpResponseMessage response, CancellationToken cancellationToken)
+    {
+        if (!_logger.IsEnabled(LogLevel.Information))
+            return;
+
+        _logger.LogInformation("Response: {response}", response);
+
+        if (response.Content != null)
+            _logger.LogInformation(
+                "Response Body: {content}",
+                await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false));
     }
 }
