@@ -14,7 +14,7 @@ public static class SwaggerOptionsExtensions
         => options.OperationFilter<SwaggerApiStatusCodeFilter<TgsResponseTypeConverter>>();
 
     public static void ApplyWebApiToolkitSupport(this SwaggerGenOptions options)
-                        => options.OperationFilter<SwaggerApiStatusCodeFilter<NormalTypeConverter>>();
+        => options.OperationFilter<SwaggerApiStatusCodeFilter<NormalTypeConverter>>();
 
     private static string DisplayNameSchemaIdSelector(Type modelType)
     {
