@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-
-namespace Tgs.WebApi.Toolkits;
+﻿namespace Tgs.WebApi.Toolkits;
 
 internal class FlushRequestContentMiddleware : IMiddleware
 {

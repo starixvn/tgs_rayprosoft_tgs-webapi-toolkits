@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi.Models;
 
 namespace Tgs.WebApi.Toolkits.Documentation;
 

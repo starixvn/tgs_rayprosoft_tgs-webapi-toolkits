@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Tgs.WebApi.Toolkits.Documentation;
@@ -15,12 +14,13 @@ internal class NormalTypeConverter : ITypeConverter
         _schemaRepository = schemaRepository ?? throw new ArgumentNullException(nameof(schemaRepository));
     }
 
-    public OpenApiSchema? GenerateSuccessSchema(Type? modelType)
+    public OpenApiSchema? GenerateFailSchema(Type? modelType)
         => modelType == null
             ? null
             : _schemaGenerator.GenerateSchema(modelType, _schemaRepository);
-    public OpenApiSchema? GenerateFailSchema(Type? modelType) 
-        => modelType == null
+
+    public OpenApiSchema? GenerateSuccessSchema(Type? modelType)
+            => modelType == null
             ? null
             : _schemaGenerator.GenerateSchema(modelType, _schemaRepository);
 }

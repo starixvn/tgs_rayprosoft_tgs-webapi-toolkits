@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-
-namespace Tgs.WebApi.Toolkits;
+﻿namespace Tgs.WebApi.Toolkits;
 
 internal class HttpClientLoggingHandler<TServiceClient> : DelegatingHandler
 {

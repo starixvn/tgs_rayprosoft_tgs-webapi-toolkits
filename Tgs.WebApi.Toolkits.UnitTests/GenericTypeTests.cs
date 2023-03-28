@@ -1,5 +1,4 @@
-﻿using NUnit.Framework;
-using Tgs.WebApi.Toolkits.ViewModels;
+﻿using Tgs.WebApi.Toolkits.ViewModels;
 
 namespace Tgs.WebApi.Toolkits.UnitTests;
 

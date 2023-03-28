@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Tgs.WebApi.Toolkits.ViewModels;
 
@@ -16,6 +15,11 @@ internal class TgsResponseTypeConverter : ITypeConverter
         _schemaRepository = schemaRepository ?? throw new ArgumentNullException(nameof(schemaRepository));
     }
 
+    public OpenApiSchema? GenerateFailSchema(Type? modelType)
+        => modelType == null
+            ? null
+            : _schemaGenerator.GenerateSchema(modelType, _schemaRepository);
+
     public OpenApiSchema? GenerateSuccessSchema(Type? modelType)
     {
         if (modelType == null)
@@ -30,9 +34,4 @@ internal class TgsResponseTypeConverter : ITypeConverter
 
         return _schemaGenerator.GenerateSchema(wrapType, _schemaRepository);
     }
-
-    public OpenApiSchema? GenerateFailSchema(Type? modelType)
-        => modelType == null
-            ? null
-            : _schemaGenerator.GenerateSchema(modelType, _schemaRepository);
 }
