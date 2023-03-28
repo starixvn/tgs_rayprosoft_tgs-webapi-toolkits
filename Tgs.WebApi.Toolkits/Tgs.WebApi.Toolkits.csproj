@@ -1,9 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
-		<Version>0.1.1</Version>
+		<Version>0.2.0</Version>
 		<Authors>Raypro</Authors>
 		<IsPackable>true</IsPackable>
 		<RepositoryUrl>https://gitlab.com/rayprosoft/tgs-webapi-toolkits.git</RepositoryUrl>
@@ -14,14 +14,12 @@
 		<LangVersion>10.0</LangVersion>
 		<Description>用於處理swagger、web api的status code處理、http client logging</Description>
 		<PackageId>Tgs.WebApi.Toolkits</PackageId>
+		<RootNamespace>Tgs.WebApi.Toolkits</RootNamespace>
+		<OutputType>Library</OutputType>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.3.0">
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
-		<PackageReference Include="System.Linq.Async" Version="5.0.0" Condition="'$(TargetFramework)' == 'net5.0'" />
-		<PackageReference Include="System.Linq.Async" Version="6.0.1" Condition="'$(TargetFramework)' == 'net6.0'" />
+		<PackageReference Include="System.Linq.Async" Version="6.0.1" />
 	</ItemGroup>
 
 </Project>

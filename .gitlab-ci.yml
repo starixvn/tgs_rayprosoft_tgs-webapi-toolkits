@@ -1,6 +1,6 @@
 include:
   - project: rayprosoft/tgs-ci-scripts
-    ref: main
+    ref: feats/add-push-nuget-template
     file: GitLab/Templates/gitlab-job-templates.yml
 
 variables:
@@ -12,51 +12,17 @@ stages:
   - publish
 
 build-code:
-  stage: build
-  script:
-    - dotnet build -c $BuildConfiguration
-  only:
-    - merge_requests
-    - main
-  cache:
-    key: $BuildCacheKey
-    untracked: true
+  extends: .build-code-template
 
 unit-test:
-  stage: test
-  script:
-    - dotnet test -c $BuildConfiguration -l:"junit;LogFilePath=../TestReports/{assembly}-TestReport.xml" --no-restore --no-build
-  needs:
-    - build-code
-  only:
-    - merge_requests
-    - main
-  cache:
-    key: $BuildCacheKey
-    untracked: true
-    policy: pull
-  artifacts:
-    when: always
-    reports:
-      junit: ./TestReports/*-TestReport.xml
+  extends: .unit-test-template
 
 push-nuget:
-  stage: publish
-  needs:
-    - build-code
-    - unit-test
-  only:
-    - main
-  cache:
-    key: $BuildCacheKey
-    untracked: true
-    policy: pull
+  extends: .push-nuget-template
   script:
-    - dotnet pack -c $BuildConfiguration "Tgs.WebApi.Toolkits/Tgs.WebApi.Toolkits.csproj" --no-restore
-    - dotnet nuget push "Tgs.WebApi.Toolkits/bin/$BuildConfiguration/*.nupkg" -s "raypro-baget" -k $NugetApiKey --skip-duplicate
+    - push_package "Tgs.WebApi.Toolkits"
+    - push_package "Tgs.WebApi.Toolkits.Swashbuckle"
   artifacts:
-    name: Nuget
-    untracked: false
-    expire_in: "30 days"
     paths:
       - Tgs.WebApi.Toolkits/bin/$BuildConfiguration/*.nupkg
+      - Tgs.WebApi.Toolkits.Swashbuckle/bin/$BuildConfiguration/*.nupkg

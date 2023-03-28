@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31702.278
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.WebApi.Toolkits", "Tgs.WebApi.Toolkits\Tgs.WebApi.Toolkits.csproj", "{F6FD659B-2A24-445B-A93A-30D7F885076A}"
 EndProject
@@ -12,7 +12,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		nuget.config = nuget.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.WebApi.Toolkits.UnitTests", "Tgs.WebApi.Toolkits.UnitTests\Tgs.WebApi.Toolkits.UnitTests.csproj", "{66C35497-4717-4E57-BB51-BDBE285FED4F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.WebApi.Toolkits.UnitTests", "Tgs.WebApi.Toolkits.UnitTests\Tgs.WebApi.Toolkits.UnitTests.csproj", "{66C35497-4717-4E57-BB51-BDBE285FED4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.WebApi.Toolkits.Swashbuckle", "Tgs.WebApi.Toolkits.Swashbuckle\Tgs.WebApi.Toolkits.Swashbuckle.csproj", "{64F1FB74-1293-48E5-A736-11CFB42DF4DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,6 +30,10 @@ Global
 		{66C35497-4717-4E57-BB51-BDBE285FED4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66C35497-4717-4E57-BB51-BDBE285FED4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66C35497-4717-4E57-BB51-BDBE285FED4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64F1FB74-1293-48E5-A736-11CFB42DF4DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64F1FB74-1293-48E5-A736-11CFB42DF4DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64F1FB74-1293-48E5-A736-11CFB42DF4DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64F1FB74-1293-48E5-A736-11CFB42DF4DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
