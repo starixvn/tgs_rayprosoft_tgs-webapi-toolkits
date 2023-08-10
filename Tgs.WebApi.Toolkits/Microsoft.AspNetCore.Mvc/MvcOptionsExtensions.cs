@@ -6,7 +6,7 @@ public static class MvcOptionsExtensions
 {
     public static void AddWebApiToolkitFilters(this MvcOptions options)
     {
-        _ = options.Filters.Add<RetouchResponseFilter>();
+        _ = options.Filters.Add<TransformResponseFilter>();
     }
 
     public static void AddWrapResponseFilters(this MvcOptions options)
