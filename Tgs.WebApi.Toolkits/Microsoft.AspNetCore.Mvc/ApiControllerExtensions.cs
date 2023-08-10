@@ -1,6 +1,4 @@
 ﻿using System.Net;
-using Microsoft.AspNetCore.Http.Features;
-using Tgs.WebApi.Toolkits;
 
 namespace Microsoft.AspNetCore.Mvc;
 
@@ -38,16 +36,8 @@ public static class ApiControllerExtensions
         this ControllerBase controller,
         int statusCode,
         TFailResult result)
-    {
-        var responseFeature = controller.HttpContext.Features.Get<IHttpResponseFeature>();
-
-        if (responseFeature is not null)
-            responseFeature.StatusCode = statusCode;
-
-        var failResponseFeature = new FailResponseFeature<TFailResult>(statusCode, result);
-
-        controller.HttpContext.Features.Set<IFailResponseFeature>(failResponseFeature);
-    }
+        => controller.HttpContext.TransformResult(
+            controller.StatusCode(statusCode, result));
 
     public static Task<TResult> FailAsync<TResult, TFailResult>(
         this ControllerBase controller,
@@ -82,7 +72,6 @@ public static class ApiControllerExtensions
         TFailResult failResult)
     {
         Fail(controller, statusCode, failResult);
-
         return Task.CompletedTask;
     }
 }

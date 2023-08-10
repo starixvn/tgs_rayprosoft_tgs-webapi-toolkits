@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Tgs.WebApi.Toolkits;
 
-public class RetouchResponseFilter : IAsyncResultFilter
+public class TransformResponseFilter : IAsyncResultFilter
 {
     public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
     {
@@ -11,22 +11,16 @@ public class RetouchResponseFilter : IAsyncResultFilter
             return;
 
         var successStatusCodeAttr = context.ActionDescriptor.EndpointMetadata.OfType<SuccessStatusCodeAttribute>().LastOrDefault();
-        var failResponseFeature = context.HttpContext.Features.Get<IFailResponseFeature>();
+        var transformResponseFeature = context.HttpContext.Features.Get<TransformResponseFeature>();
         var responseFeature = context.HttpContext.Features.Get<IHttpResponseFeature>();
 
         if (responseFeature is null)
             _ = await next();
 
-        if (failResponseFeature != null)
-        {
-            responseFeature!.StatusCode = failResponseFeature.StatusCode;
-
-            context.Result = failResponseFeature.GetActionResult();
-        }
+        if (transformResponseFeature != null)
+            context.Result = transformResponseFeature.ActionResult;
         else if (successStatusCodeAttr != null)
-        {
             responseFeature!.StatusCode = successStatusCodeAttr.StatusCode;
-        }
 
         _ = await next();
     }
