@@ -20,48 +20,26 @@ public class SwaggerApiStatusCodeFilter<TTypeConverter> : IOperationFilter where
             context.SchemaGenerator,
             context.SchemaRepository);
 
-        var successStatusCodeAttr = context
-            .ApiDescription
+        var successStatusCodeAttr = context.ApiDescription
             .ActionDescriptor
             .EndpointMetadata
             .OfType<SuccessStatusCodeAttribute>()
             .LastOrDefault();
 
-        if (successStatusCodeAttr != null)
+        foreach (var responseType in context.ApiDescription.SupportedResponseTypes)
         {
-            operation.Responses.Clear();
+            if (!operation.Responses.TryGetValue(responseType.StatusCode.ToString(), out var response))
+                continue;
 
-            var responseType = context.ApiDescription
-                .SupportedResponseTypes
-                .FirstOrDefault();
+            if (successStatusCodeAttr is not null && responseType.StatusCode == successStatusCodeAttr.StatusCode)
+                response.Description = successStatusCodeAttr.Description ?? response.Description;
 
-            operation.Responses.Add(
-                successStatusCodeAttr.StatusCode.ToString(),
-                new OpenApiResponse
+            response.Content = responseType.ApiResponseFormats.ToDictionary(
+                f => f.MediaType,
+                f => new OpenApiMediaType
                 {
-                    Description = successStatusCodeAttr.Description,
-                    Content = responseType == null || responseType.Type == typeof(void)
-                        ? null
-                        : new Dictionary<string, OpenApiMediaType>
-                        {
-                            ["application/json"] = new OpenApiMediaType
-                            {
-                                Schema = typeConverter.GenerateSuccessSchema(responseType.Type)
-                            }
-                        }
+                    Schema = typeConverter.GenerateSuccessSchema(responseType?.Type)
                 });
-        }
-        else
-        {
-            foreach (var response in operation.Responses)
-            {
-                var resType = context.ApiDescription.SupportedResponseTypes
-                    .Where(r => r.StatusCode.ToString() == response.Key)
-                    .FirstOrDefault();
-
-                foreach (var content in response.Value.Content)
-                    content.Value.Schema = typeConverter.GenerateSuccessSchema(resType?.Type);
-            }
         }
 
         foreach (var attr in context.ApiDescription.ActionDescriptor.EndpointMetadata.OfType<FailStatusCodeAttribute>())
