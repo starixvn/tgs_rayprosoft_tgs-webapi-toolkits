@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using NUnit.Framework.Legacy;
 
 namespace Tgs.WebApi.Toolkits.UnitTests;
 
@@ -13,8 +14,8 @@ public class LogTests
 
         sut.LogInformation("{content}", await content.ReadAsStringAsync());
 
-        Assert.AreEqual("FormattedLogValues", sut.StateType);
-        Assert.AreEqual("test", sut.StateText);
+        ClassicAssert.AreEqual("FormattedLogValues", sut.StateType);
+        ClassicAssert.AreEqual("test", sut.StateText);
     }
 
     [Test]
@@ -26,7 +27,7 @@ public class LogTests
 
         sut.LogInformation("{request}", request);
 
-        Assert.AreEqual("FormattedLogValues", sut.StateType);
-        Assert.IsNotEmpty(sut.StateText);
+        ClassicAssert.AreEqual("FormattedLogValues", sut.StateType);
+        ClassicAssert.IsNotEmpty(sut.StateText);
     }
 }

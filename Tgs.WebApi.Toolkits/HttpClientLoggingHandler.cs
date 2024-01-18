@@ -27,7 +27,7 @@ internal class HttpClientLoggingHandler<TServiceClient> : DelegatingHandler
         if (!_logger.IsEnabled(LogLevel.Information))
             return;
 
-        _logger.LogInformation("Request: {request}", request);
+        _logger.LogInformation("Request: {request}", request.ToString());
 
         if (request.Content != null)
             _logger.LogInformation(
@@ -40,7 +40,7 @@ internal class HttpClientLoggingHandler<TServiceClient> : DelegatingHandler
         if (!_logger.IsEnabled(LogLevel.Information))
             return;
 
-        _logger.LogInformation("Response: {response}", response);
+        _logger.LogInformation("Response: {response}", response.ToString());
 
         if (response.Content != null)
             _logger.LogInformation(

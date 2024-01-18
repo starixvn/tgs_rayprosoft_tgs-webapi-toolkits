@@ -6,8 +6,7 @@ internal class FlushRequestContentMiddleware : IMiddleware
 
     public FlushRequestContentMiddleware(ILoggerFactory loggerFactory)
     {
-        if (loggerFactory is null)
-            throw new ArgumentNullException(nameof(loggerFactory));
+        ArgumentNullException.ThrowIfNull(loggerFactory, nameof(loggerFactory));
 
         _logger = loggerFactory.CreateLogger("Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware");
     }
