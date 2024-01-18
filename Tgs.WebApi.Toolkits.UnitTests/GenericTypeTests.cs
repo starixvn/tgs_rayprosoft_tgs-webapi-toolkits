@@ -1,4 +1,5 @@
-﻿using Tgs.WebApi.Toolkits.ViewModels;
+﻿using NUnit.Framework.Legacy;
+using Tgs.WebApi.Toolkits.ViewModels;
 
 namespace Tgs.WebApi.Toolkits.UnitTests;
 
@@ -11,6 +12,6 @@ public class GenericTypeTests
 
         var actual = typeof(SuccessViewModel<int>);
 
-        Assert.AreEqual(expected, actual.GetGenericTypeDefinition());
+        ClassicAssert.AreEqual(expected, actual.GetGenericTypeDefinition());
     }
 }

@@ -9,7 +9,7 @@ internal class FakeLogger : ILogger
 
     public string? StateType { get; set; }
 
-    public IDisposable BeginScope<TState>(TState state) => Disposable.Empty;
+    public IDisposable? BeginScope<TState>(TState state) where TState : notnull => Disposable.Empty;
 
     public bool IsEnabled(LogLevel logLevel) => true;
 
